@@ -31,6 +31,7 @@ type OpenSlot struct {
 func main() {
 	var refreshRate int
 	var daysOffset int
+	var newConfig string
 
 	flag.IntVar(&refreshRate, "refresh", 120, "Time between refresh in seconds.")
 	flag.IntVar(&daysOffset, "days", 2, "Range of days to look for available slots.")
@@ -45,6 +46,17 @@ func main() {
 	_, err := os.Stat("config.json")
 	if err != nil {
 		getInfo(&configuration)
+	} else {
+		for {
+			fmt.Print("Found previous config file. Create new config file? [Y/n] ")
+			fmt.Scanln(&newConfig)
+			if len(newConfig) > 0 && newConfig[0] == 'Y' {
+				getInfo(&configuration)
+				break
+			} else if len(newConfig) > 0 && newConfig[0] == 'n' {
+				break
+			}
+		}
 	}
 	content, err := ioutil.ReadFile("config.json")
 	if err != nil {
@@ -89,13 +101,13 @@ func main() {
 }
 
 func getInfo(configuration *Configuration) {
-	fmt.Println("Config file not found. Please enter information")
+	fmt.Println("Please enter information")
 	fmt.Print("Project ID: ")
-	fmt.Scanln(configuration.ProjectId)
+	fmt.Scanln(&configuration.ProjectId)
 	fmt.Print("Team ID: ")
-	fmt.Scanln(configuration.TeamId)
+	fmt.Scanln(&configuration.TeamId)
 	fmt.Print("Session ID: ")
-	fmt.Scanln(configuration.SessionId)
+	fmt.Scanln(&configuration.SessionId)
 	config, err := os.OpenFile("config.json", os.O_CREATE, 0644)
 	if err != nil {
 		log.Fatalln(err)
