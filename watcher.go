@@ -21,11 +21,11 @@ type Configuration struct {
 }
 
 type OpenSlot struct {
-	End   string
-	Start string
-	Title string
-	Id    int
 	Ids   string
+	Start string
+	End   string
+	Id    string
+	Title string
 }
 
 func main() {
